@@ -15,14 +15,14 @@ export default function SignatureModal({ title, onSave, onClose }) {
     c.width = r.width * ratio; c.height = r.height * ratio;
     const ctx = c.getContext('2d');
     ctx.scale(ratio, ratio);
-    ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0a1a5c';
+    ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#000';
   }, []);
 
   const pos = (e) => { const r = ref.current.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
   const down = (e) => {
     e.preventDefault(); ref.current.setPointerCapture(e.pointerId);
     drawing.current = true; last.current = pos(e);
-    const ctx = ref.current.getContext('2d'); ctx.beginPath(); ctx.arc(last.current.x, last.current.y, 1.2, 0, 7); ctx.fillStyle = '#0a1a5c'; ctx.fill();
+    const ctx = ref.current.getContext('2d'); ctx.beginPath(); ctx.arc(last.current.x, last.current.y, 2.5, 0, 7); ctx.fillStyle = '#000'; ctx.fill();
     setEmpty(false);
   };
   const move = (e) => {
@@ -34,7 +34,19 @@ export default function SignatureModal({ title, onSave, onClose }) {
   const clear = () => {
     const c = ref.current; c.getContext('2d').clearRect(0, 0, c.width, c.height); setEmpty(true);
   };
-  const save = () => { if (!empty) onSave(ref.current.toDataURL('image/png')); };
+  // Recorta la firma a su área real para que no se reduzca demasiado en la planilla
+  const save = () => {
+    if (empty) return;
+    const c = ref.current, w = c.width, h = c.height;
+    const d = c.getContext('2d').getImageData(0, 0, w, h).data;
+    let minX = w, minY = h, maxX = 0, maxY = 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 10) { if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y; }
+    const pad = 6, sx = Math.max(0, minX - pad), sy = Math.max(0, minY - pad);
+    const sw = Math.min(w - sx, maxX - minX + pad * 2), sh = Math.min(h - sy, maxY - minY + pad * 2);
+    const out = document.createElement('canvas'); out.width = sw; out.height = sh;
+    out.getContext('2d').drawImage(c, sx, sy, sw, sh, 0, 0, sw, sh);
+    onSave(out.toDataURL('image/png'));
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/90 flex flex-col p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">

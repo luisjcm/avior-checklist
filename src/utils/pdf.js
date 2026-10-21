@@ -8,7 +8,7 @@ export const fileName = (data) => {
 const worker = (el, name) => html2pdf().set({
   margin: 8, filename: name,
   image: { type: 'jpeg', quality: 0.98 },
-  html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
+  html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0, windowWidth: 1000 },
   jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' },
 }).from(el);
 

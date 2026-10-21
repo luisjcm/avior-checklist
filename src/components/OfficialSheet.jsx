@@ -9,11 +9,11 @@ const Diagonal = () => (
   </svg>
 );
 
-// Planilla oficial: tamaño fijo (carta, 780px) para PDF consistente.
+// Planilla oficial: tamaño fijo (720px < área útil carta) para PDF consistente.
 const OfficialSheet = forwardRef(function OfficialSheet({ data }, ref) {
   const h = data.header;
   return (
-    <div ref={ref} style={{ width: 780, background: '#fff', color: '#000', fontFamily: 'Arial, Helvetica, sans-serif', fontSize: 12, padding: 20, boxSizing: 'border-box' }}>
+    <div ref={ref} style={{ width: 720, background: '#fff', color: '#000', fontFamily: 'Arial, Helvetica, sans-serif', fontSize: 12, padding: 20, boxSizing: 'border-box' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <tbody>
           <tr><td colSpan={4} style={{ ...cell, textAlign: 'center', fontWeight: 700, fontSize: 16, padding: 8 }}>CHECK LIST AEROPUERTO</td></tr>
@@ -84,7 +84,7 @@ const OfficialSheet = forwardRef(function OfficialSheet({ data }, ref) {
               return (
                 <td key={sg.id} style={{ ...cell, width: '33.33%', height: 90, verticalAlign: 'bottom', textAlign: 'center' }}>
                   <div style={{ height: 55, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-                    {s.img && <img src={s.img} alt="" style={{ maxHeight: 55, maxWidth: '100%' }} />}
+                    {s.img && <img src={s.img} alt="" style={{ maxHeight: 55, maxWidth: '90%', objectFit: 'contain' }} />}
                   </div>
                   <div style={{ borderTop: b, marginTop: 2, paddingTop: 2, fontSize: 11 }}>
                     {s.name && <div style={{ fontWeight: 700 }}>{s.name}</div>}
