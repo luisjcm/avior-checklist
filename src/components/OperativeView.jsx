@@ -19,25 +19,27 @@ export default function OperativeView({ data, setData }) {
 
   return (
     <div className="space-y-4 pb-28">
-      <section className="bg-slate-900 rounded-2xl p-4 space-y-3 border border-slate-800">
-        <h2 className="text-sky-300 font-semibold">Datos de cabecera</h2>
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Soporte"><input className={inp} value={data.header.soporte} onChange={(e) => setHeader('soporte', e.target.value)} /></Field>
-          <Field label="Teléfono"><input className={inp} inputMode="tel" value={data.header.telefono} onChange={(e) => setHeader('telefono', e.target.value)} /></Field>
-          <Field label="Localidad"><select className={inp} value={data.header.localidad} onChange={(e) => setHeader('localidad', e.target.value)}>{[...new Set([data.header.localidad, ...LOCALIDADES])].map((o) => <option key={o}>{o}</option>)}</select></Field>
-          <Field label="Fecha"><input className={inp} value={data.header.fecha} onChange={(e) => setHeader('fecha', e.target.value)} /></Field>
-        </div>
-        <Field label="Horario de soporte">
-          <input className={inp} list="turnos" value={data.header.horario} onChange={(e) => setHeader('horario', e.target.value)} />
-          <datalist id="turnos">{TURNOS.map((t) => <option key={t} value={t} />)}</datalist>
-        </Field>
-        <Field label="Ubicación"><select className={inp} value={data.header.ubicacion} onChange={(e) => setHeader('ubicacion', e.target.value)}>{UBICACIONES.map((o) => <option key={o}>{o}</option>)}</select></Field>
-      </section>
-
       <div className="sticky top-0 z-10 -mx-4 px-4 py-2 bg-[#071f4d]/95 backdrop-blur">
         <div className="flex justify-between text-sm text-white mb-1"><span>{done}/{TOTAL_ITEMS} verificados</span><span>{pct}%</span></div>
         <div className="h-3 rounded-full bg-slate-800 overflow-hidden"><div className="h-full bg-emerald-400 transition-all" style={{ width: `${pct}%` }} /></div>
       </div>
+
+      <section className="bg-slate-900 rounded-2xl p-4 space-y-3 border border-slate-800">
+        <h2 className="text-sky-300 font-semibold">Datos de cabecera</h2>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Soporte"><input className={inp} placeholder="Nombre del técnico" value={data.header.soporte} onChange={(e) => setHeader('soporte', e.target.value)} /></Field>
+          <Field label="Teléfono"><input className={inp} inputMode="tel" placeholder="0412-0000000" value={data.header.telefono} onChange={(e) => setHeader('telefono', e.target.value)} /></Field>
+          <Field label="Localidad"><select className={inp} value={data.header.localidad} onChange={(e) => setHeader('localidad', e.target.value)}>{[...new Set([data.header.localidad, ...LOCALIDADES])].map((o) => <option key={o}>{o}</option>)}</select></Field>
+          <Field label="Fecha"><input className={inp} placeholder="DD/MM/AAAA" inputMode="numeric" value={data.header.fecha} onChange={(e) => setHeader('fecha', e.target.value)} /></Field>
+        </div>
+        <Field label="Horario de soporte">
+          <select className={inp} value={data.header.horario} onChange={(e) => setHeader('horario', e.target.value)}>
+            {[...new Set([data.header.horario, ...TURNOS])].filter(Boolean).map((t) => <option key={t}>{t}</option>)}
+          </select>
+        </Field>
+        <Field label="Ubicación"><select className={inp} value={data.header.ubicacion} onChange={(e) => setHeader('ubicacion', e.target.value)}>{UBICACIONES.map((o) => <option key={o}>{o}</option>)}</select></Field>
+      </section>
+
 
       {SECTIONS.map((s, si) => {
         const sd = s.items.filter((_, i) => data.checks[`${s.id}-${i}`].ok).length;
@@ -82,7 +84,7 @@ export default function OperativeView({ data, setData }) {
           const s = data.signatures[sg.id];
           return (
             <div key={sg.id} className="space-y-2">
-              <Field label={`Nombre ${sg.label}`}><input className={inp} value={s.name} onChange={(e) => setSig(sg.id, { name: e.target.value })} /></Field>
+              <Field label={`Nombre ${sg.label}`}><input className={inp} placeholder="Nombre y apellido del supervisor" value={s.name} onChange={(e) => setSig(sg.id, { name: e.target.value })} /></Field>
               <div className="flex items-center gap-3">
                 <div className="flex-1 h-20 rounded-xl bg-white grid place-items-center overflow-hidden">
                   {s.img ? <img src={s.img} alt={`Firma ${sg.label}`} className="max-h-full" /> : <span className="text-slate-400 text-sm">Sin firma</span>}

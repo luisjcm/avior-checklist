@@ -17,7 +17,7 @@ export const SECTIONS = [
 ];
 export const TOTAL_ITEMS = SECTIONS.reduce((n, s) => n + s.items.length, 0);
 export const LOCALIDADES = ['ATO - BLA', 'ATO - CCS', 'ATO - MAR', 'ATO - PMV', 'ATO - VLN', 'ATO - BRM'];
-export const TURNOS = ['04:30 a 12:30', '12:30 a 20:30', '20:30 a 04:30'];
+export const TURNOS = ['04:30 a 12:30', '13:00 a 21:00'];
 export const UBICACIONES = ['Aeropuerto Nacional', 'Aeropuerto Internacional'];
 export const SIGNERS = [
   { id: 'trafico', label: 'Supervisor de Tráfico' },
@@ -33,7 +33,7 @@ export const initialState = () => {
   const checks = {}, obs = {};
   SECTIONS.forEach((s) => { obs[s.id] = ''; s.items.forEach((_, i) => { checks[`${s.id}-${i}`] = { ok: false, obs: '' }; }); });
   return {
-    header: { soporte: 'Luis Curbata', telefono: '0424-8887150', localidad: 'ATO - BLA', horario: '04:30 a 12:30', fecha: todayStr(), ubicacion: 'Aeropuerto Nacional' },
+    header: { soporte: '', telefono: '', localidad: 'ATO - BLA', horario: '04:30 a 12:30', fecha: todayStr(), ubicacion: 'Aeropuerto Nacional' },
     checks, comentarios: '',
     signatures: { trafico: { name: '', img: '' }, ventas: { name: '', img: '' }, carga: { name: '', img: '' } },
   };
