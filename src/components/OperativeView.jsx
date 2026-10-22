@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, Check, PenLine, Trash2 } from 'lucide-react';
+import { ChevronDown, Check, PenLine, Trash2, Headset } from 'lucide-react';
 import { SECTIONS, TOTAL_ITEMS, LOCALIDADES, TURNOS, UBICACIONES, SIGNERS } from '../data/checklist';
 import SignatureModal from './SignatureModal';
 
@@ -98,6 +98,11 @@ export default function OperativeView({ data, setData }) {
           );
         })}
       </section>
+
+      <footer className="flex items-center justify-center gap-1.5 pt-2 text-xs text-slate-500 select-none">
+        <Headset size={14} strokeWidth={1.75} aria-hidden="true" />
+        <span>Desarrollado por: <span className="font-medium text-slate-400">HelpDesk Avior</span></span>
+      </footer>
 
       {signing && <SignatureModal title={signing.label} onClose={() => setSigning(null)} onSave={(img) => { setSig(signing.id, { img }); setSigning(null); }} />}
     </div>
