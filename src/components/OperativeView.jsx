@@ -3,10 +3,11 @@ import { ChevronDown, Check, CheckCheck, PenLine, Trash2, Headset } from 'lucide
 import { SECTIONS, TOTAL_ITEMS, LOCALIDADES, TURNOS, UBICACIONES, SIGNERS } from '../data/checklist';
 import SignatureModal from './SignatureModal';
 
-const inp = 'w-full h-12 px-3 rounded-xl bg-avior-well text-avior-ink placeholder:text-zinc-500 border border-avior-line focus:border-avior-bright focus:ring-2 focus:ring-avior-bright/30 outline-none';
-const Field = ({ label, children }) => (<label className="block"><span className="text-xs text-avior-muted uppercase tracking-wide">{label}</span>{children}</label>);
+const inp = 'w-full min-w-0 h-12 px-3 text-sm sm:text-base rounded-xl bg-avior-well text-avior-ink placeholder:text-zinc-500 border border-avior-line focus:border-avior-bright focus:ring-2 focus:ring-avior-bright/30 outline-none';
+const errCls = '!border-red-400 ring-2 ring-red-500/40 animate-shake scroll-mt-24';
+const Field = ({ label, error, children }) => (<label className="block"><span className={`text-xs uppercase tracking-wide ${error ? 'text-red-300' : 'text-avior-muted'}`}>{label}{error && ' *'}</span>{children}{error && <span className="block text-xs text-red-300 mt-1">Campo obligatorio</span>}</label>);
 
-export default function OperativeView({ data, setData }) {
+export default function OperativeView({ data, setData, missing = [], setMissing = () => {} }) {
   const [open, setOpen] = useState({ s1: true });
   const [signing, setSigning] = useState(null);
   const [burst, setBurst] = useState({}); // key -> orden para animar en cascada
@@ -14,7 +15,8 @@ export default function OperativeView({ data, setData }) {
   const done = Object.values(data.checks).filter((c) => c.ok).length;
   const pct = Math.round((done / TOTAL_ITEMS) * 100);
 
-  const setHeader = (k, v) => setData((d) => ({ ...d, header: { ...d.header, [k]: v } }));
+  const setHeader = (k, v) => { if (v.trim()) setMissing((m) => m.filter((x) => x !== k)); setHeaderRaw(k, v); };
+  const setHeaderRaw = (k, v) => setData((d) => ({ ...d, header: { ...d.header, [k]: v } }));
   const setCheck = (key, patch) => setData((d) => ({ ...d, checks: { ...d.checks, [key]: { ...d.checks[key], ...patch } } }));
   const setSig = (id, patch) => setData((d) => ({ ...d, signatures: { ...d.signatures, [id]: { ...d.signatures[id], ...patch } } }));
   const markAll = (s) => {
@@ -39,8 +41,8 @@ export default function OperativeView({ data, setData }) {
       <section className="bg-metal rounded-2xl p-4 space-y-3 border border-avior-line shadow-lg shadow-black/30">
         <h2 className="text-avior-light font-semibold">Datos de cabecera</h2>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Soporte"><input className={inp} placeholder="Nombre del técnico" value={data.header.soporte} onChange={(e) => setHeader('soporte', e.target.value)} /></Field>
-          <Field label="Teléfono"><input className={inp} inputMode="tel" placeholder="0412-0000000" value={data.header.telefono} onChange={(e) => setHeader('telefono', e.target.value)} /></Field>
+          <Field label="Soporte" error={missing.includes('soporte')}><input id="field-soporte" className={`${inp} ${missing.includes('soporte') ? errCls : ''}`} placeholder="Nombre" value={data.header.soporte} onChange={(e) => setHeader('soporte', e.target.value)} /></Field>
+          <Field label="Teléfono" error={missing.includes('telefono')}><input id="field-telefono" className={`${inp} ${missing.includes('telefono') ? errCls : ''}`} inputMode="tel" placeholder="0412-0000000" value={data.header.telefono} onChange={(e) => setHeader('telefono', e.target.value)} /></Field>
           <Field label="Localidad"><select className={inp} value={data.header.localidad} onChange={(e) => setHeader('localidad', e.target.value)}>{[...new Set([data.header.localidad, ...LOCALIDADES])].map((o) => <option key={o}>{o}</option>)}</select></Field>
           <Field label="Fecha"><input className={inp} placeholder="DD/MM/AAAA" inputMode="numeric" value={data.header.fecha} onChange={(e) => setHeader('fecha', e.target.value)} /></Field>
         </div>
