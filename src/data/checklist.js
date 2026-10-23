@@ -3,7 +3,7 @@ export const SECTIONS = [
     'Las Computadoras están encendidas',
     'Funciona correctamente KIU Res',
     'Están conectadas y funcionando las Impresoras',
-    'Funciona correctamente Airline Choice, su impresora y teclado' ] },
+     ] },
   { id: 's2', title: 'Revisión en Carga', items: [
     'Las Computadoras están encendidas',
     'Funciona correctamente Onix',

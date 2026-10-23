@@ -49,7 +49,7 @@ export default function SignatureModal({ title, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/90 flex flex-col p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+    <div className="fixed inset-0 z-50 bg-black/90 flex flex-col p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
       <div className="flex items-center justify-between text-white mb-2">
         <h3 className="font-semibold">Firma: {title}</h3>
         <button onClick={onClose} className="p-2 rounded-full bg-white/10" aria-label="Cerrar"><X size={22} /></button>
@@ -57,12 +57,12 @@ export default function SignatureModal({ title, onSave, onClose }) {
       <div className="flex-1 bg-white rounded-2xl relative overflow-hidden min-h-[240px]">
         <canvas ref={ref} className="absolute inset-0 w-full h-full" style={{ touchAction: 'none' }}
           onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} />
-        {empty && <p className="absolute inset-0 grid place-items-center text-slate-300 text-lg pointer-events-none">Firme aquí con el dedo</p>}
-        <div className="absolute left-6 right-6 bottom-12 border-b border-slate-300 pointer-events-none" />
+        {empty && <p className="absolute inset-0 grid place-items-center text-zinc-300 text-lg pointer-events-none">Firme aquí con el dedo</p>}
+        <div className="absolute left-6 right-6 bottom-12 border-b border-zinc-300 pointer-events-none" />
       </div>
       <div className="grid grid-cols-2 gap-3 mt-3">
-        <button onClick={clear} className="h-14 rounded-xl bg-slate-700 text-white font-semibold flex items-center justify-center gap-2"><Eraser size={20} />Limpiar</button>
-        <button onClick={save} disabled={empty} className="h-14 rounded-xl bg-emerald-500 disabled:opacity-40 text-white font-semibold flex items-center justify-center gap-2"><Check size={20} />Guardar Firma</button>
+        <button onClick={clear} className="h-14 rounded-xl bg-avior-nav text-white font-semibold flex items-center justify-center gap-2"><Eraser size={20} />Limpiar</button>
+        <button onClick={save} disabled={empty} className="h-14 rounded-xl bg-avior-bright hover:brightness-110 active:scale-[0.98] transition disabled:opacity-40 text-white font-semibold flex items-center justify-center gap-2"><Check size={20} />Guardar Firma</button>
       </div>
     </div>
   );

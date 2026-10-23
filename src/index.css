@@ -1,4 +1,5 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-html, body { background: #071f4d; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+html { background: #121314; color-scheme: dark; }
+body { background: linear-gradient(180deg, #1D1E20 0%, #151617 60%, #111213 100%) fixed; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
