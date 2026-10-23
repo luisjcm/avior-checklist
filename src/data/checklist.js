@@ -2,8 +2,7 @@ export const SECTIONS = [
   { id: 's1', title: 'Revisión en los Counters Tráfico', items: [
     'Las Computadoras están encendidas',
     'Funciona correctamente KIU Res',
-    'Están conectadas y funcionando las Impresoras',
-     ] },
+    'Están conectadas y funcionando las Impresoras' ] },
   { id: 's2', title: 'Revisión en Carga', items: [
     'Las Computadoras están encendidas',
     'Funciona correctamente Onix',

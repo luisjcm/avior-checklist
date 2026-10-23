@@ -11,16 +11,31 @@ export default function App() {
   const [view, setView] = useState('op');
   const [busy, setBusy] = useState('');
   const [msg, setMsg] = useState('');
+  const [missing, setMissing] = useState([]); // campos obligatorios sin completar
   const sheetRef = useRef(null);
 
-  const flash = (m) => { setMsg(m); setTimeout(() => setMsg(''), 3500); };
+  const flash = (m) => { setMsg(m); setTimeout(() => setMsg(''), 5000); };
   const reset = () => {
     if (!window.confirm('¿Iniciar un nuevo checklist? Se borrarán los datos actuales (se conservan soporte, teléfono, localidad, horario y ubicación).')) return;
     const fresh = initialState();
     fresh.header = { ...fresh.header, soporte: data.header.soporte, telefono: data.header.telefono, localidad: data.header.localidad, horario: data.header.horario, ubicacion: data.header.ubicacion };
     setData(fresh); setView('op'); window.scrollTo(0, 0);
   };
+  const REQUIRED = [['soporte', 'Soporte'], ['telefono', 'Teléfono']];
+  const validate = () => {
+    const faltan = REQUIRED.filter(([k]) => !String(data.header[k] || '').trim());
+    if (!faltan.length) { setMissing([]); return true; }
+    setMissing(faltan.map(([k]) => k));
+    setView('op');
+    flash(`Complete los campos obligatorios: ${faltan.map(([, l]) => l).join(', ')}`);
+    setTimeout(() => {
+      const el = document.getElementById(`field-${faltan[0][0]}`);
+      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => el.focus({ preventScroll: true }), 350); }
+    }, 80);
+    return false;
+  };
   const run = async (kind) => {
+    if (!validate()) return;
     setBusy(kind);
     try {
       if (kind === 'pdf') await downloadPdf(sheetRef.current, data);
@@ -42,7 +57,7 @@ export default function App() {
         ))}
       </nav>
 
-      {view === 'op' && <OperativeView data={data} setData={setData} />}
+      {view === 'op' && <OperativeView data={data} setData={setData} missing={missing} setMissing={setMissing} />}
 
       {/* La planilla siempre está montada (fuera de pantalla si no se ve) para poder exportar desde cualquier vista */}
       <div className={view === 'sheet' ? 'pb-32' : ''} style={view === 'sheet' ? {} : { position: 'fixed', left: -10000, top: 0 }}>
