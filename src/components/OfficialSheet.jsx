@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import { SECTIONS, SIGNERS } from '../data/checklist';
+import logo from '../assets/logo-avior-black.png';
 
 const b = '1px solid #000';
 const cell = { border: b, padding: '4px 6px', verticalAlign: 'middle' };
@@ -16,7 +17,12 @@ const OfficialSheet = forwardRef(function OfficialSheet({ data }, ref) {
     <div ref={ref} style={{ width: 720, background: '#fff', color: '#000', fontFamily: 'Arial, Helvetica, sans-serif', fontSize: 12, padding: 20, boxSizing: 'border-box' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <tbody>
-          <tr><td colSpan={4} style={{ ...cell, textAlign: 'center', fontWeight: 700, fontSize: 16, padding: 8 }}>CHECK LIST AEROPUERTO</td></tr>
+          <tr>
+            <td colSpan={4} style={{ ...cell, position: 'relative', textAlign: 'center', fontWeight: 700, fontSize: 16, padding: 8, height: 46 }}>
+              <img src={logo} alt="Avior Airlines" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', height: 26 }} />
+              CHECK LIST AEROPUERTO
+            </td>
+          </tr>
           <tr>
             <td style={{ ...cell, fontWeight: 700, width: '16%' }}>Soporte:</td><td style={{ ...cell, width: '34%' }}>{h.soporte}</td>
             <td style={{ ...cell, fontWeight: 700, width: '16%' }}>Teléfono:</td><td style={{ ...cell, width: '34%' }}>{h.telefono}</td>
