@@ -1,13 +1,14 @@
 import React, { useRef, useState } from 'react';
 import { ClipboardCheck, FileText, Download, Share2, RotateCcw, Loader2 } from 'lucide-react';
 import usePersistentState from './hooks/usePersistentState';
-import { initialState } from './data/checklist';
+import { initialState, migrateState } from './data/checklist';
 import OperativeView from './components/OperativeView';
 import OfficialSheet from './components/OfficialSheet';
 import { downloadPdf, sharePdf } from './utils/pdf';
+import { ensureSerial, isValidDate } from './utils/serial';
 
 export default function App() {
-  const [data, setData] = usePersistentState('avior-checklist-v1', initialState);
+  const [data, setData] = usePersistentState('avior-checklist-v1', initialState, migrateState);
   const [view, setView] = useState('op');
   const [busy, setBusy] = useState('');
   const [msg, setMsg] = useState('');
@@ -21,9 +22,10 @@ export default function App() {
     fresh.header = { ...fresh.header, soporte: data.header.soporte, telefono: data.header.telefono, localidad: data.header.localidad, horario: data.header.horario, ubicacion: data.header.ubicacion };
     setData(fresh); setView('op'); window.scrollTo(0, 0);
   };
-  const REQUIRED = [['soporte', 'Soporte'], ['telefono', 'Teléfono']];
+  const REQUIRED = [['soporte', 'Soporte'], ['telefono', 'Teléfono'], ['fecha', 'Fecha (DD/MM/AAAA)']];
+  const isMissing = (k) => (k === 'fecha' ? !isValidDate(data.header.fecha) : !String(data.header[k] || '').trim());
   const validate = () => {
-    const faltan = REQUIRED.filter(([k]) => !String(data.header[k] || '').trim());
+    const faltan = REQUIRED.filter(([k]) => isMissing(k));
     if (!faltan.length) { setMissing([]); return true; }
     setMissing(faltan.map(([k]) => k));
     setView('op');
@@ -38,8 +40,15 @@ export default function App() {
     if (!validate()) return;
     setBusy(kind);
     try {
-      if (kind === 'pdf') await downloadPdf(sheetRef.current, data);
-      else { const ok = await sharePdf(sheetRef.current, data); if (!ok) { await downloadPdf(sheetRef.current, data); flash('Compartir no disponible: se descargó el PDF.'); } }
+      // Genera (o reutiliza) el serial y espera a que la planilla lo muestre antes de capturarla
+      const { serial, created } = ensureSerial(data);
+      const doc = { ...data, serial };
+      if (created) {
+        setData((d) => ({ ...d, serial }));
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(r, 60))));
+      }
+      if (kind === 'pdf') await downloadPdf(sheetRef.current, doc);
+      else { const ok = await sharePdf(sheetRef.current, doc); if (!ok) { await downloadPdf(sheetRef.current, doc); flash('Compartir no disponible: se descargó el PDF.'); } }
     } catch (e) { if (e?.name !== 'AbortError') flash('Error al generar el PDF.'); }
     setBusy('');
   };

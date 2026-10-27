@@ -15,7 +15,7 @@ export default function OperativeView({ data, setData, missing = [], setMissing 
   const done = Object.values(data.checks).filter((c) => c.ok).length;
   const pct = Math.round((done / TOTAL_ITEMS) * 100);
 
-  const setHeader = (k, v) => { if (v.trim()) setMissing((m) => m.filter((x) => x !== k)); setHeaderRaw(k, v); };
+  const setHeader = (k, v) => { if (v.trim() && (k !== 'fecha' || /^\d{2}\/\d{2}\/\d{4}$/.test(v.trim()))) setMissing((m) => m.filter((x) => x !== k)); setHeaderRaw(k, v); };
   const setHeaderRaw = (k, v) => setData((d) => ({ ...d, header: { ...d.header, [k]: v } }));
   const setCheck = (key, patch) => setData((d) => ({ ...d, checks: { ...d.checks, [key]: { ...d.checks[key], ...patch } } }));
   const setSig = (id, patch) => setData((d) => ({ ...d, signatures: { ...d.signatures, [id]: { ...d.signatures[id], ...patch } } }));
@@ -41,10 +41,10 @@ export default function OperativeView({ data, setData, missing = [], setMissing 
       <section className="bg-metal rounded-2xl p-4 space-y-3 border border-avior-line shadow-lg shadow-black/30">
         <h2 className="text-avior-light font-semibold">Datos de cabecera</h2>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Soporte" error={missing.includes('soporte')}><input id="field-soporte" className={`${inp} ${missing.includes('soporte') ? errCls : ''}`} placeholder="Nombre" value={data.header.soporte} onChange={(e) => setHeader('soporte', e.target.value)} /></Field>
+          <Field label="Soporte" error={missing.includes('soporte')}><input id="field-soporte" className={`${inp} ${missing.includes('soporte') ? errCls : ''}`} placeholder="Nombre del técnico" value={data.header.soporte} onChange={(e) => setHeader('soporte', e.target.value)} /></Field>
           <Field label="Teléfono" error={missing.includes('telefono')}><input id="field-telefono" className={`${inp} ${missing.includes('telefono') ? errCls : ''}`} inputMode="tel" placeholder="0412-0000000" value={data.header.telefono} onChange={(e) => setHeader('telefono', e.target.value)} /></Field>
           <Field label="Localidad"><select className={inp} value={data.header.localidad} onChange={(e) => setHeader('localidad', e.target.value)}>{[...new Set([data.header.localidad, ...LOCALIDADES])].map((o) => <option key={o}>{o}</option>)}</select></Field>
-          <Field label="Fecha"><input className={inp} placeholder="DD/MM/AAAA" inputMode="numeric" value={data.header.fecha} onChange={(e) => setHeader('fecha', e.target.value)} /></Field>
+          <Field label="Fecha" error={missing.includes('fecha')}><input id="field-fecha" className={`${inp} ${missing.includes('fecha') ? errCls : ''}`} placeholder="DD/MM/AAAA" inputMode="numeric" value={data.header.fecha} onChange={(e) => setHeader('fecha', e.target.value)} /></Field>
         </div>
         <Field label="Horario de soporte">
           <select className={inp} value={data.header.horario} onChange={(e) => setHeader('horario', e.target.value)}>

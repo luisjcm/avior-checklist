@@ -21,6 +21,10 @@ const OfficialSheet = forwardRef(function OfficialSheet({ data }, ref) {
             <td colSpan={4} style={{ ...cell, position: 'relative', textAlign: 'center', fontWeight: 700, fontSize: 16, padding: 8, height: 46 }}>
               <img src={logo} alt="Avior Airlines" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', height: 26 }} />
               CHECK LIST AEROPUERTO
+              <div style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', textAlign: 'right', lineHeight: 1.25 }}>
+                <div style={{ fontSize: 8, fontWeight: 400, color: '#444' }}>N° DE CHECKLIST</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: data.serial?.id ? '#000' : '#888', fontStyle: data.serial?.id ? 'normal' : 'italic' }}>{data.serial?.id || 'Se asigna al exportar'}</div>
+              </div>
             </td>
           </tr>
           <tr>
