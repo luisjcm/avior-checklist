@@ -1,6 +1,7 @@
 import html2pdf from 'html2pdf.js';
 
 export const fileName = (data) => {
+  if (data.serial?.id) return `Checklist_ID_${data.serial.id}.pdf`;
   const loc = data.header.localidad.replace(/\s+/g, '');
   const date = data.header.fecha.replace(/\//g, '-');
   return `Checklist_Aeropuerto_${loc}_${date}.pdf`;
