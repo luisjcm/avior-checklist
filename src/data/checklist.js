@@ -9,10 +9,14 @@ export const SECTIONS = [
     'Están conectadas y funcionando las Impresoras' ] },
   { id: 's3', title: 'Revisión en Ventas', items: [
     'Funciona correctamente KIU Res',
-    'Están conectadas y funcionando las Impresoras' ] },
+    'Están conectadas y funcionando las Impresoras',
+    'Está conectado y funcionando el WiFi de Pasajeros'
+   ] },
   { id: 's4', title: 'Revisión en Puertas de Embarque', items: [
     'Funciona correctamente KIU Res',
-    'Funciona el escáner' ] },
+    'Funciona el escáner',
+    'Está conectado el Router y WiFi en el área de embarque'
+   ] },
 ];
 export const TOTAL_ITEMS = SECTIONS.reduce((n, s) => n + s.items.length, 0);
 export const LOCALIDADES = ['ATO - BLA', 'ATO - CCS', 'ATO - MAR', 'ATO - PMV', 'ATO - VLN', 'ATO - BRM'];
