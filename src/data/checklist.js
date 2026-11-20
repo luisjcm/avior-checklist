@@ -1,5 +1,6 @@
 export const SECTIONS = [
   { id: 's1', title: 'Revisión en los Counters Tráfico', items: [
+    'Los TV están encendidos y funcionando correctamente',
     'Las Computadoras están encendidas',
     'Funciona correctamente KIU Res',
     'Están conectadas y funcionando las Impresoras' ] },
